@@ -4,7 +4,7 @@
   "description": "A customizable React wheel picker bringing iOS-like functionality to the web, maintained by CodePunter.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CodePunter/react-wheelpicker"
+    "url": "https://github.com/DERRICK-TORKORNOO/codepunter-react-wheelpicker"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

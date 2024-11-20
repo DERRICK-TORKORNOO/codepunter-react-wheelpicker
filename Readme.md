@@ -2,7 +2,7 @@
 
 A customizable React wheel picker bringing iOS-like functionality to the web!
 
-[Demo](https://codepunter.github.io/codepunter-react-wheelpicker/)
+[Demo](https://DERRICK-TORKORNOO.github.io/codepunter-react-wheelpicker/)
 
 ---
 
@@ -151,5 +151,5 @@ Licensed under the [ISC License](https://opensource.org/licenses/ISC).
 
 ## Contributing
 
-Feel free to submit pull requests or issues at the [GitHub Repository](https://github.com/CodePunter/codepunter-react-wheelpicker).
+Feel free to submit pull requests or issues at the [GitHub Repository](https://github.com/DERRICK-TORKORNOO/codepunter-react-wheelpicker).
 
