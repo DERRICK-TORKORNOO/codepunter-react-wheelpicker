@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "commonjs",
-      "declaration": true,
-      "outDir": "./dist",
-      "jsx": "react",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true
-    },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES6",                // Transpile to ES6 JavaScript
+    "module": "commonjs",           // Use CommonJS modules
+    "declaration": true,            // Generate .d.ts declaration files
+    "emitDeclarationOnly": true,   // Only generate declaration files (no JS)
+    "outDir": "./dist",             // Output directory for all transpiled files
+    "jsx": "react",                 // Enable JSX support for React
+    "strict": true,                 // Enable all strict type checking
+    "esModuleInterop": true,        // Allow default imports for CommonJS modules
+    "skipLibCheck": true            // Skip type checking for library dependencies
+  },
+  "include": ["src"],               // Include the `src` folder
+  "exclude": ["node_modules", "dist"] // Exclude these folders
+}
