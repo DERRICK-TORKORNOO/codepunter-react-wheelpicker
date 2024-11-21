@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "@babel/preset-env",   // Replaces "env" with the latest preset
+    "@babel/preset-react", // React preset for JSX transformation
+    "@babel/preset-typescript" // Add TypeScript support
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime", 
+      {
+        "corejs": 3 // Use the latest Core-JS for polyfilling
+      }
+    ]
+  ]
+}
