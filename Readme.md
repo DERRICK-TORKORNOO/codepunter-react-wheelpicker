@@ -2,7 +2,7 @@
 
 A customizable React wheel picker bringing iOS-like functionality to the web!
 
-[Demo](https://DERRICK-TORKORNOO.github.io/codepunter-react-wheelpicker/)
+[Demo](https://derrick-torkornoo.github.io/codepunter-react-wheelpicker/)
 
 ---
 
