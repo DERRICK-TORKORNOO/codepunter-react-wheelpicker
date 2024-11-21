@@ -3,3 +3,13 @@ examples
 .babelrc
 .gitignore
 webpack.config.js
+
+# src/                # Exclude the raw source files
+# examples/           # Exclude the examples folder
+# .babelrc            # Exclude Babel config
+# .gitignore          # Exclude Git config
+# webpack.config.js   # Exclude Webpack config
+# *.log               # Exclude any log files
+# node_modules/       # Exclude node_modules (though this is ignored by default)
+# tests/              # If you have any tests, exclude them
+# dist/!*.d.ts        # Include only the TypeScript declaration files in `dist`
