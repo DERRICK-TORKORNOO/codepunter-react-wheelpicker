@@ -14,6 +14,8 @@ type WheelPickerProps = {
   selectedBackgroundColor?: string; // Background color for the selected item
   selectedTextColor?: string; // Text color for the selected item
   unselectedTextColor?: string; // Text color for unselected items
+  selectedItemStyles?: React.CSSProperties; // Styles applied to the selected item
+  disableTextHighlight?: boolean; // Disable text highlighting
 };
 
 const WheelPicker: React.FC<WheelPickerProps> = ({
@@ -28,6 +30,8 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
   selectedBackgroundColor = "blue",
   selectedTextColor = "white",
   unselectedTextColor = "black",
+  selectedItemStyles = {}, // Default empty styles for selected items
+  disableTextHighlight = false, // Default to allow text highlighting
 }) => {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,14 +69,25 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
             `${scrollerId}-scroll-item--${index}`
           );
           if (item) {
-            item.style.backgroundColor =
-              index === itemInSelectorArea
-                ? selectedBackgroundColor
-                : "transparent";
-            item.style.color =
-              index === itemInSelectorArea
-                ? selectedTextColor
-                : unselectedTextColor;
+            const isSelected = index === itemInSelectorArea;
+            item.style.backgroundColor = isSelected
+              ? selectedBackgroundColor
+              : "transparent";
+            item.style.color = isSelected
+              ? selectedTextColor
+              : unselectedTextColor;
+
+            // Apply additional styles for selected items
+            if (isSelected) {
+              Object.entries(selectedItemStyles).forEach(([key, value]) => {
+                (item.style as any)[key] = value;
+              });
+            } else {
+              // Reset styles for unselected items
+              Object.keys(selectedItemStyles).forEach((key) => {
+                (item.style as any)[key] = "";
+              });
+            }
           }
         });
       }
@@ -94,6 +109,7 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
       selectedBackgroundColor,
       selectedTextColor,
       unselectedTextColor,
+      selectedItemStyles,
       finishedScrolling,
     ]
   );
@@ -139,6 +155,7 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
               index === defaultSelection ? selectedBackgroundColor : "transparent",
             color:
               index === defaultSelection ? selectedTextColor : unselectedTextColor,
+            userSelect: disableTextHighlight ? "none" : "auto", // Disable text highlight if required
           }}
           onClick={() => {
             const y = index * adjustedHeight - 1;
