@@ -11,6 +11,9 @@ type WheelPickerProps = {
   defaultSelection?: number; // Default selected item index
   updateSelection: (index: number) => void; // Callback to update the selected item
   scrollerId: string; // Unique ID for the scroller
+  selectedBackgroundColor?: string; // Background color for the selected item
+  selectedTextColor?: string; // Text color for the selected item
+  unselectedTextColor?: string; // Text color for unselected items
 };
 
 const WheelPicker: React.FC<WheelPickerProps> = ({
@@ -22,64 +25,95 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
   defaultSelection = 0,
   updateSelection,
   scrollerId,
+  selectedBackgroundColor = "blue",
+  selectedTextColor = "white",
+  unselectedTextColor = "black",
 }) => {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const scrollTimer = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleScroll = useCallback(() => {
-    if (!scrollerRef.current) return;
-
-    const adjustedHeight = animation === "wheel" ? 40 : height;
-    const scrollTop = scrollerRef.current.scrollTop;
-    const itemInSelectorArea = Math.floor(
-      (scrollTop + adjustedHeight / 2) / adjustedHeight
-    );
-
-    if (itemInSelectorArea < data.length) {
-      // Highlight the selected item
-      data.forEach((_, index) => {
-        const item = document.getElementById(
-          `${scrollerId}-scroll-item--${index}`
-        );
-        if (item) {
-          item.classList.toggle(
-            "selected-time",
-            index === itemInSelectorArea
-          );
-        }
-      });
-    }
-
-    // Apply styles
-    applyStyle(scrollerId, itemInSelectorArea, data.length, animation);
-
-    // Prevent rapid scrolling adjustments
-    if (scrollTimer.current) clearTimeout(scrollTimer.current);
-
-    scrollTimer.current = setTimeout(() => {
-      const y = itemInSelectorArea * adjustedHeight;
-      scrollerRef.current?.scrollTo({ top: y, behavior: "smooth" });
+  const finishedScrolling = useCallback(
+    (selectorAreaHeight: number, id: string, itemInSelectorArea: number) => {
       updateSelection(itemInSelectorArea);
-    }, 150);
-  }, [height, animation, data, scrollerId, updateSelection]);
+      const fix = document.getElementById(id);
+      const y = itemInSelectorArea * selectorAreaHeight - 1;
+      if (fix) {
+        fix.scroll({
+          top: Math.max(y, 0),
+          behavior: "smooth",
+        });
+      }
+    },
+    [updateSelection]
+  );
+
+  const handleScroll = useCallback(
+    (e: Event) => {
+      if (!scrollerRef.current) return;
+
+      const adjustedHeight = animation === "wheel" ? 40 : height;
+      const scrollTop = (e.target as HTMLDivElement).scrollTop;
+
+      const itemInSelectorArea = Math.floor(
+        (scrollTop + adjustedHeight / 2) / adjustedHeight
+      );
+
+      if (itemInSelectorArea < data.length) {
+        // Update styles for selected and unselected items
+        data.forEach((_, index) => {
+          const item = document.getElementById(
+            `${scrollerId}-scroll-item--${index}`
+          );
+          if (item) {
+            item.style.backgroundColor =
+              index === itemInSelectorArea
+                ? selectedBackgroundColor
+                : "transparent";
+            item.style.color =
+              index === itemInSelectorArea
+                ? selectedTextColor
+                : unselectedTextColor;
+          }
+        });
+      }
+
+      applyStyle(scrollerId, itemInSelectorArea, data.length, animation);
+
+      // Prevent rapid scrolling adjustments
+      if (scrollTimer.current) clearTimeout(scrollTimer.current);
+
+      scrollTimer.current = setTimeout(() => {
+        finishedScrolling(adjustedHeight, scrollerId, itemInSelectorArea);
+      }, 150);
+    },
+    [
+      animation,
+      data,
+      height,
+      scrollerId,
+      selectedBackgroundColor,
+      selectedTextColor,
+      unselectedTextColor,
+      finishedScrolling,
+    ]
+  );
 
   useEffect(() => {
-    const scroller = scrollerRef.current;
-
+    const scroller = document.getElementById(scrollerId);
     if (!scroller) return;
 
     const adjustedHeight = animation === "wheel" ? 40 : height;
 
-    // Scroll to the default selection
-    const y = defaultSelection * adjustedHeight;
-    scroller.scrollTo({ top: y, behavior: "smooth" });
+    // Scroll to default selection
+    const y = defaultSelection * adjustedHeight - 1;
+    scroller.scrollTo({ top: Math.max(y, 0), behavior: "smooth" });
 
-    // Add scroll event listener
+    // Attach scroll event listener
     scroller.addEventListener("scroll", handleScroll);
     return () => {
       scroller.removeEventListener("scroll", handleScroll);
     };
-  }, [defaultSelection, height, animation, handleScroll]);
+  }, [defaultSelection, height, animation, scrollerId, handleScroll]);
 
   const renderListItems = () => {
     const adjustedHeight = animation === "wheel" ? 40 : height;
@@ -87,19 +121,29 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
       <div
         key={index}
         className="scroll-item-container"
-        style={{ minHeight: adjustedHeight, maxHeight: adjustedHeight }}
+        style={{
+          minHeight: adjustedHeight,
+          maxHeight: adjustedHeight,
+        }}
       >
         <div
           id={`${scrollerId}-scroll-item--${index}`}
-          className={`scroll-item ${index === defaultSelection ? "selected-time" : ""}`}
+          className={`scroll-item ${
+            index === defaultSelection ? "selected-time" : ""
+          }`}
           style={{
-            fontSize,
+            fontSize: `${fontSize}px`,
             minHeight: adjustedHeight,
             maxHeight: adjustedHeight,
+            backgroundColor:
+              index === defaultSelection ? selectedBackgroundColor : "transparent",
+            color:
+              index === defaultSelection ? selectedTextColor : unselectedTextColor,
           }}
           onClick={() => {
-            const y = index * adjustedHeight;
-            scrollerRef.current?.scrollTo({ top: y, behavior: "smooth" });
+            const y = index * adjustedHeight - 1;
+            scrollerRef.current?.scrollTo({ top: Math.max(y, 0), behavior: "smooth" });
+            updateSelection(index);
           }}
         >
           {item}

@@ -1,6 +1,6 @@
 # codepunter-react-wheelpicker
 
-A customizable React wheel picker bringing iOS-like functionality to the web!
+A customizable React wheel picker bringing iOS-like functionality to the web! Supports customization of selected item styles and more.
 
 [Demo](https://derrick-torkornoo.github.io/codepunter-react-wheelpicker/)
 
@@ -18,7 +18,9 @@ npm install codepunter-react-wheelpicker
 
 The component imported is called **`WheelPicker`**.
 
-To use the component, simply import the package at the top of the file and use `<WheelPicker />` to render the picker.
+To use the component, import it at the top of your file and use `<WheelPicker />` to render the picker.
+
+---
 
 ### Import:
 
@@ -26,9 +28,70 @@ To use the component, simply import the package at the top of the file and use `
 import WheelPicker from 'codepunter-react-wheelpicker';
 ```
 
-### Example:
+---
 
-```jsx
+### Example with a Functional Component:
+
+```tsx
+import React, { useState } from 'react';
+import WheelPicker from 'codepunter-react-wheelpicker';
+
+const App: React.FC = () => {
+  const [picker, setPicker] = useState({
+    pickerOpen: false,
+    data: [
+      'Intro to Data Science',
+      'Big Data',
+      'Design and Analysis of Algorithms',
+      'Operating Systems',
+      'Cloud Computing',
+      'Principles of Database Systems',
+    ],
+    defaultSelection: 3,
+    selection: 'Big Data',
+  });
+
+  return (
+    <div>
+      <div
+        className="selected"
+        onClick={() => setPicker({ ...picker, pickerOpen: !picker.pickerOpen })}
+      >
+        {picker.selection}
+      </div>
+      {picker.pickerOpen && (
+        <WheelPicker
+          animation="flat"
+          data={picker.data}
+          height={40}
+          parentHeight={250}
+          fontSize={18}
+          defaultSelection={picker.defaultSelection}
+          selectedBackgroundColor="blue"
+          selectedTextColor="white"
+          unselectedTextColor="gray"
+          updateSelection={(selectedIndex) =>
+            setPicker({
+              ...picker,
+              selection: picker.data[selectedIndex],
+              defaultSelection: selectedIndex,
+            })
+          }
+          scrollerId="scroll-select-subject"
+        />
+      )}
+    </div>
+  );
+};
+
+export default App;
+```
+
+---
+
+### Example with a Class Component:
+
+```tsx
 import React from 'react';
 import WheelPicker from 'codepunter-react-wheelpicker';
 
@@ -56,33 +119,38 @@ class App extends React.Component {
       <React.Fragment>
         <div
           className="selected"
-          onClick={() => this.setState({ pickerOpen: !this.state.pickerOpen })}
+          onClick={() =>
+            this.setState({ pickerOpen: !this.state.pickerOpen })
+          }
         >
           {this.state.selection}
         </div>
         {this.state.pickerOpen && (
-          <div className="demo-container">
-            <WheelPicker
-              animation="wheel"
-              data={this.state.data}
-              height={40}
-              parentHeight={250}
-              fontSize={13}
-              defaultSelection={this.state.defaultSelection}
-              updateSelection={(selectedIndex) =>
-                this.setState({
-                  selection: this.state.data[selectedIndex],
-                  defaultSelection: selectedIndex,
-                })
-              }
-              scrollerId="scroll-select-subject"
-            />
-          </div>
+          <WheelPicker
+            animation="wheel"
+            data={this.state.data}
+            height={40}
+            parentHeight={250}
+            fontSize={15}
+            selectedBackgroundColor="green"
+            selectedTextColor="white"
+            unselectedTextColor="black"
+            defaultSelection={this.state.defaultSelection}
+            updateSelection={(selectedIndex) =>
+              this.setState({
+                selection: this.state.data[selectedIndex],
+                defaultSelection: selectedIndex,
+              })
+            }
+            scrollerId="scroll-select-subject"
+          />
         )}
       </React.Fragment>
     );
   }
 }
+
+export default App;
 ```
 
 ---
@@ -94,15 +162,18 @@ A unique string to identify the `WheelPicker`. Each picker on the page must have
 
 ---
 
-### **2. `data`** (Array) - **Required**
+### **2. `data`** (Array of Strings) - **Required**
 An array of strings used to render picker options.
 
 ---
 
 ### **3. `animation`** (String)
-Two values are accepted: `'flat'` or `'wheel'`.
+Animation style for the picker. Possible values:
 
-- If `animation="wheel"`, the height is automatically set to `40`.
+- `'flat'`
+- `'wheel'`
+
+- If `animation="wheel"`, the `height` is automatically set to `40`.
 
 ---
 
@@ -133,6 +204,29 @@ Receives the selected index, which can be used to update the state of the parent
 
 ### **8. `fontSize`** (Number)
 The font size of the list elements.
+
+- Default: `16`
+
+---
+
+### **9. `selectedBackgroundColor`** (String)
+Defines the background color of the currently selected item.
+
+- Default: `"blue"`
+
+---
+
+### **10. `selectedTextColor`** (String)
+Defines the text color of the currently selected item.
+
+- Default: `"white"`
+
+---
+
+### **11. `unselectedTextColor`** (String)
+Defines the text color of items that are not selected.
+
+- Default: `"black"`
 
 ---
 
