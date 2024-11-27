@@ -11,7 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development",
-    "generate-types" : "npx tsc",
+    "generate-types": "npx tsc",
     "build": "webpack --mode production",
     "transpile": "babel src --extensions \".ts,.tsx,.js,.jsx\" -d dist --copy-files",
     "prepublishOnly": "npm run transpile",
@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.0",
-    "@babel/runtime-corejs3": "^7.26.0"
+    "@babel/runtime-corejs3": "^7.26.0",
+    "codepunter-react-wheelpicker": "^1.0.4"
   }
 }
