@@ -1,6 +1,6 @@
 {
   "name": "codepunter-react-wheelpicker",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A customizable React wheel picker bringing iOS-like functionality to the web, maintained by CodePunter.",
   "repository": {
     "type": "git",

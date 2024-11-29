@@ -124,20 +124,24 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
     const y = defaultSelection * adjustedHeight - 1;
     scroller.scrollTo({ top: Math.max(y, 0), behavior: "smooth" });
 
-    // Apply styles for the default selected item
-    const defaultSelectedItem = document.getElementById(
-      `${scrollerId}-scroll-item--${defaultSelection}`
-    );
 
-    if (defaultSelectedItem) {
-      defaultSelectedItem.style.backgroundColor = selectedBackgroundColor;
-      defaultSelectedItem.style.color = selectedTextColor;
 
-      // Apply custom styles for the selected item
-      Object.entries(selectedItemStyles).forEach(([key, value]) => {
-        (defaultSelectedItem.style as any)[key] = value;
-      });
-    }
+    // Use requestAnimationFrame to apply styles after the scroll operation
+    requestAnimationFrame(() => {
+      const defaultSelectedItem = document.getElementById(
+        `${scrollerId}-scroll-item--${defaultSelection}`
+      );
+
+      if (defaultSelectedItem) {
+        defaultSelectedItem.style.backgroundColor = selectedBackgroundColor;
+        defaultSelectedItem.style.color = selectedTextColor;
+
+        // Apply custom styles for the selected item
+        Object.entries(selectedItemStyles).forEach(([key, value]) => {
+          (defaultSelectedItem.style as any)[key] = value;
+        });
+      }
+    });
 
     // Attach scroll event listener
     scroller.addEventListener("scroll", handleScroll);
